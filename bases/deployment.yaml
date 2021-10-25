@@ -1,0 +1,87 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ldap-server
+  labels:
+    app: ldap-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ldap-server
+  template:
+    metadata:
+      labels:
+        app: ldap-server
+    spec:
+      containers:
+        - name: ldap-server
+          image: osixia/openldap:1.4.0
+          imagePullPolicy: IfNotPresent
+          args:
+            - --copy-service
+          volumeMounts:
+            - name: ldap-volume-users
+              mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom/bootstrap.ldif
+              subPath: bootstrap.ldif
+            - name: ldap-volume-overlay
+              mountPath: /container/service/slapd/assets/config/bootstrap/ldif/03-memberOf.ldif
+              subPath: 03-memberOf.ldif
+            - name: ldap-data
+              mountPath: /var/lib/ldap
+            - name: ldap-config
+              mountPath: /etc/ldap/slapd.d
+            - name: ldap-certs
+              mountPath: /container/service/slapd/assets/certs
+          ports:
+            - containerPort: 389
+              name: openldap
+            - containerPort: 636
+              name: openldaps
+          env:
+            - name: LDAP_TLS
+              value: "true"
+            - name: LDAP_TLS_CRT_FILENAME
+              value: "tls.crt"
+            - name: LDAP_TLS_KEY_FILENAME
+              value: "tls.key"
+            - name: LDAP_TLS_CA_CRT_FILENAME
+              value: "ca.crt"
+            - name: LDAP_TLS_VERIFY_CLIENT
+              value: "never"
+            - name: LDAP_ORGANISATION
+              value: "LDAP"
+            - name: LDAP_DOMAIN
+              value: "ldap.com"
+            - name: LDAP_ADMIN_PASSWORD
+              value: "lnxsas"
+            - name: LDAP_CONFIG_PASSWORD
+              value: "lnxsas"
+            - name: LDAP_READONLY_USER
+              value: "false"
+            - name: LDAP_REMOVE_CONFIG_AFTER_SETUP
+              value: "false"
+            - name: LDAP_RFC2307BIS_SCHEMA
+              value: "true"
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500Mi
+            requests:
+              cpu: 50m
+              memory: 50Mi
+      volumes:
+        - name: ldap-volume-users
+          configMap:
+            name: ldap-bootstrap-users
+        - name: ldap-volume-overlay
+          configMap:
+            name: ldap-memberof-overlay
+        - name: ldap-data
+          emptyDir: {}
+        - name: ldap-config
+          emptyDir: {}
+        - name: ldap-certs
+          secret:
+            secretName: "ldap-tls-cert"

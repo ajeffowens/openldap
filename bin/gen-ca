@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -eu
+
+[ ! -d ca ] && echo "ca dir not found, exiting" && exit 1
+pushd ca
+
+# create new key
+openssl genpkey -algorithm RSA  -out ldap_ca_key.pem -pkeyopt rsa_keygen_bits:2048
+
+# create new cert from key
+openssl req -new -x509 -sha256 -days 3650 -extensions v3_ca -subj "/C=US/CN=myldap" -key ldap_ca_key.pem -out ldap_ca_cert.pem -passin pass:lnxsas
+
+# insert base64 encoded versions of cert + key into ca.yaml
+export BASE64_CERT=$(cat ldap_ca_cert.pem|base64 -w0)
+export BASE64_KEY=$(cat ldap_ca_key.pem|base64 -w0)
+cat ca.sample.yaml | envsubst > ca.yaml
+
+popd

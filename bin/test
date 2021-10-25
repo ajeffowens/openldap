@@ -1,0 +1,10 @@
+#/usr/bin/env bash
+
+set -eu
+
+LDAPNS=${LDAPNS:=ldap}
+
+kubectl run testldap --image=osixia/openldap:1.4.0
+kubectl wait --for=condition=Ready pod/testldap
+kubectl exec testldap -it -- ldapsearch -H ldap://ldap-service.${LDAPNS} -D cn=admin,dc=ldap,dc=com -w lnxsas -b dc=ldap,dc=com
+kubectl delete pod testldap

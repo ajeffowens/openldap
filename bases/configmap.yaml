@@ -1,0 +1,238 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ldap-bootstrap-users
+data:
+  bootstrap.ldif: |
+    version: 1
+
+    dn: ou=users,dc=ldap,dc=com
+    objectClass: organizationalUnit
+    objectClass: top
+    ou: users
+
+    dn: ou=groups,dc=ldap,dc=com
+    objectClass: organizationalUnit
+    objectClass: top
+    ou: groups
+
+    dn: uid=sasldap,ou=users,dc=ldap,dc=com
+    objectClass: inetOrgPerson
+    objectClass: organizationalPerson
+    objectClass: posixAccount
+    objectClass: person
+    objectClass: top
+    cn: sasldap
+    gidNumber: 1003
+    sn: LDAP
+    displayName: SAS LDAP Service Account
+    givenName: SAS LDAP
+    l: Cary
+    mail: sasldap@ldap.com
+    o: ldap
+    uid: sasldap
+    uidNumber: 1003
+    homeDirectory: /home/sasldap
+    userPassword: lnxsas
+
+    dn: uid=sas,ou=users,dc=ldap,dc=com
+    objectClass: inetOrgPerson
+    objectClass: organizationalPerson
+    objectClass: posixAccount
+    objectClass: top
+    cn: sas
+    gidNumber: 1001
+    homeDirectory: /home/sas
+    sn: Installer
+    uid: sas
+    uidNumber: 1001
+    displayName: SAS System Account
+    givenName: SAS
+    l: Cary
+    loginShell: /bin/bash
+    mail: sas@ldap.com
+    o: ldap
+    userPassword: lnxsas
+
+    dn: uid=cas,ou=users,dc=ldap,dc=com
+    objectClass: inetOrgPerson
+    objectClass: organizationalPerson
+    objectClass: posixAccount
+    objectClass: top
+    cn: cas
+    gidNumber: 1001
+    homeDirectory: /home/cas
+    sn: System Account
+    uid: cas
+    uidNumber: 1002
+    displayName: CAS System Account
+    givenName: CAS
+    l: Cary
+    loginShell: /bin/bash
+    mail: cas@ldap.com
+    o: ldap
+    userPassword: lnxsas
+
+    dn: cn=sasldap_grp,ou=groups,dc=ldap,dc=com
+    objectClass: extensibleObject
+    objectClass: groupOfNames
+    objectClass: posixGroup
+    objectClass: top
+    cn: sasldap_grp
+    description: SAS LDAP Service Accounts
+    displayName: SAS LDAP Service Accounts
+    gidNumber: 1003
+    name: SASLDAP
+    member: uid=sasldap,ou=users,dc=ldap,dc=com
+    memberUid: sasldap
+    o: ldap
+
+    dn: cn=sas_grp,ou=groups,dc=ldap,dc=com
+    objectClass: extensibleObject
+    objectClass: groupOfNames
+    objectClass: posixGroup
+    objectClass: top
+    cn: sas_grp
+    displayName: SAS
+    gidNumber: 1001
+    name: sas
+    member: uid=cas,ou=users,dc=ldap,dc=com
+    member: uid=sas,ou=users,dc=ldap,dc=com
+    memberUid: cas
+    memberUid: sas
+    o: ldap
+
+    dn: cn=cas_grp,ou=groups,dc=ldap,dc=com
+    objectClass: extensibleObject
+    objectClass: groupOfNames
+    objectClass: posixGroup
+    objectClass: top
+    cn: cas_grp
+    displayName: CAS
+    gidNumber: 1002
+    name: cas
+    member: uid=cas,ou=users,dc=ldap,dc=com
+    memberUid: cas
+    o: ldap
+
+    dn: uid=sasadm,ou=users,dc=ldap,dc=com
+    objectClass: inetOrgPerson
+    objectClass: organizationalPerson
+    objectClass: posixAccount
+    objectClass: top
+    cn: sasadm
+    gidNumber: 2002
+    homeDirectory: /home/sasadm
+    sn: Admin
+    uid: sasadm
+    uidNumber: 2002
+    displayName: SAS Administrator
+    givenName: SAS
+    l: Cary
+    loginShell: /bin/bash
+    mail: sasadm@ldap.com
+    o: ldap
+    userPassword: lnxsas
+
+    dn: uid=sastest1,ou=users,dc=ldap,dc=com
+    objectClass: inetOrgPerson
+    objectClass: organizationalPerson
+    objectClass: posixAccount
+    objectClass: top
+    cn: sastest1
+    gidNumber: 2003
+    homeDirectory: /home/sastest1
+    sn: Test User 1
+    uid: sastest1
+    uidNumber: 2003
+    displayName: SAS Test User 1
+    givenName: SAS
+    l: Cary
+    loginShell: /bin/bash
+    mail: sastest1@ldap.com
+    o: ldap
+    userPassword: lnxsas
+
+    dn: uid=sastest2,ou=users,dc=ldap,dc=com
+    objectClass: inetOrgPerson
+    objectClass: organizationalPerson
+    objectClass: posixAccount
+    objectClass: top
+    cn: sastest2
+    gidNumber: 2003
+    homeDirectory: /home/sastest2
+    sn: Test User 2
+    uid: sastest2
+    uidNumber: 2004
+    displayName: SAS Test User 2
+    givenName: SAS
+    l: Cary
+    loginShell: /bin/bash
+    mail: sastest2@ldap.com
+    o: ldap
+    userPassword: lnxsas
+
+    dn: cn=sasadmins,ou=groups,dc=ldap,dc=com
+    objectClass: extensibleObject
+    objectClass: groupOfNames
+    objectClass: posixGroup
+    objectClass: top
+    cn: sasadmins
+    member: uid=sas,ou=users,dc=ldap,dc=com
+    member: uid=sasadm,ou=users,dc=ldap,dc=com
+    memberOf: cn=ldap,ou=groups,dc=ldap,dc=com
+    displayName: IT Admins
+    gidNumber: 2002
+    memberUid: sas
+    memberUid: sasadm
+      name: SASAdmins
+    o: ldap
+
+    dn: cn=sasusers,ou=groups,dc=ldap,dc=com
+    objectClass: extensibleObject
+    objectClass: groupOfNames
+    objectClass: posixGroup
+    objectClass: top
+    cn: sasusers
+    member: cn=ldap,ou=groups,dc=ldap,dc=com
+    member: uid=sasadm,ou=users,dc=ldap,dc=com
+    member: uid=sastest1,ou=users,dc=ldap,dc=com
+    member: uid=sastest2,ou=users,dc=ldap,dc=com
+    member: uid=sas,ou=users,dc=ldap,dc=com
+    displayName: SAS Users
+    gidNumber: 2003
+    memberUid: ldap
+    memberUid: sas
+    memberUid: sasadm
+    memberUid: sastest1
+    memberUid: sastest2
+    name: SASUsers
+    o: ldap
+
+
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ldap-memberof-overlay
+data:
+  03-memberOf.ldif: |
+    # Load memberof module
+    dn: cn=module{0},cn=config
+    changetype: modify
+    add: olcModuleLoad
+    olcModuleLoad: memberof
+
+    # Backend memberOf overlay
+    dn: olcOverlay={0}memberof,olcDatabase={1}{{ LDAP_BACKEND }},cn=config
+    changetype: add
+    objectClass: olcOverlayConfig
+    objectClass: olcMemberOf
+    olcOverlay: {0}memberof
+    olcMemberOfDangling: ignore
+    olcMemberOfRefInt: TRUE
+    olcMemberOfGroupOC: posixGroup
+    olcMemberOfMemberAD: member
+    olcMemberOfMemberOfAD: memberOf

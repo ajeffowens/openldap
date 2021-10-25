@@ -1,0 +1,44 @@
+---
+config:
+  application:
+    sas.identities.providers.ldap.connection:
+      host: 'ldap-service.ldap'
+      port: '389'
+      url: 'ldap://${sas.identities.providers.ldap.connection.host}:${sas.identities.providers.ldap.connection.port}'
+      userDN: 'cn=admin,dc=ldap,dc=com'
+      password: 'lnxsas'
+      anonymousBind: 'false'
+      startTLS.mode: 'simple'
+    sas.identities.providers.ldap.group:
+      accountId: 'cn'
+      baseDN: 'dc=ldap,dc=com'
+      createdDate: 'createTimestamp'
+      distinguishedName: 'none'
+      member: 'memberUid'
+      memberOf: 'none'
+      modifiedDate: 'modifyTimestamp'
+      objectClass: 'posixGroup'
+      objectFilter: '(objectClass=posixGroup)'
+      searchFilter: '${sas.identities.providers.ldap.group.accountId}={0}'
+    sas.identities.providers.ldap.user:
+      accountId: 'uid'
+      baseDN: 'dc=ldap,dc=com'
+      createdDate: 'createTimestamp'
+      distinguishedName: 'none'
+      memberOf: 'none'
+      modifiedDate: 'modifyTimestamp'
+      objectClass: 'posixAccount'
+      objectFilter: '(objectClass=posixAccount)'
+      searchFilter: '${sas.identities.providers.ldap.user.accountId}={0}'
+    sas.identities.providers.ldap:
+      primaryGroupMembershipsEnabled: 'true'
+    sas.logon.initial:
+      user: sasboot
+      password: lnxsas
+#    sas.studio:
+#      showServerFiles: 'true'
+#      serverDisplayName: 'NFS Content'
+#      fileNavigationRoot: 'USER'
+#    sas.identities:
+#      administrator: 'sasadm'
+#      identifier.homeDirectoryPrefix: /export/viya-share/homes
