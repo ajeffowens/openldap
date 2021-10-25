@@ -1,0 +1,18 @@
+---
+resources:
+  - directory.yaml
+  - openldap.yaml
+  - certificate.yaml
+
+# uncomment and modify this transformer if you are pulling openldap image from a private registry
+images:
+- name: osixia/openldap
+  newName: bofaacr.azurecr.io/openldap
+  newTag: latest
+
+# if your openldap image is coming from a private registry, you will also need to uncomment these lines to add this imagePullSecret (instructions for creating imagePullSecret are in the README)
+generators:
+  - ldap-image-pull-secret.yaml
+
+transformers:
+  - add-ldap-image-pull-secret.yaml
