@@ -10,7 +10,7 @@ resources:
 #  newName: bofaacr.azurecr.io/openldap
 #  newTag: latest
 
-# if your openldap image is coming from a private registry, you will also need to uncomment these lines to add this imagePullSecret (instructions for creating imagePullSecret are in the README)
+# if your openldap image is coming from a private registry, you may also need to uncomment these lines to add this imagePullSecret (instructions for creating imagePullSecret are in the README)
 #generators:
 #  - ldap-image-pull-secret.yaml
 

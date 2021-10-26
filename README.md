@@ -1,18 +1,19 @@
+# How to Deploy Basic Openldap in K8S
 
-1. Create namespace for ldap
+## 1. Create namespace for ldap
 ```bash
 LDAPNS=ldap
 kubectl create ns $LDAPNS
 ```
 
-2. Generate cert for ldap (requires openssl)
+## 2. Generate cert for ldap (requires openssl)
 ```bash
 ./bin/gen-cert
 ```
 
 ## 3. (Optional) Use a private registry
 
-By default, this deployment will pull and run a public openldap image (osixia/openldap).  If you want to use your own version (i.e., your cluster does not have access to docker hub), then there are three things you must do before moving on:
+By default, this deployment will pull and run a public openldap image (osixia/openldap).  If your cluster is able to pull images from public internet (dockerhub specifically), then skip this section.  If you want to use your own version (i.e., your cluster does not have access to docker hub), then there are one or three things you must do before moving on:
 
 #### 3.1 - push your image to your registry
 
@@ -22,7 +23,7 @@ You can also visit the osixia github and build this image yourself following the
 
 Once this is done, you will uncomment & modify the image transfomer in the `kustomization.yaml` to point to your version.  
 
-#### 3.2 - create imagePullSecret which will authorize access to your registry
+#### 3.2 - (optional - only if your cluster does not have full read access to your register) create imagePullSecret which will authorize access to your registry
 
 Generate a local `.dockerconfigjson` file (update these variables according to your environment):
 ```bash
@@ -37,7 +38,7 @@ kubectl create -n $LDAPNS secret docker-registry --dry-run=client regcred \
 --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode > deploy/.dockerconfigjson
 ```
 
-#### 3.3 - make use of this `.dockerconfigjson` file by simply un-commenting the two relevant lines in `kustomization.yaml`
+#### 3.3 - (optional - only if your cluster does not have full read access to your register) make use of this `.dockerconfigjson` file by simply un-commenting the two relevant lines in `kustomization.yaml`
 ```
 # if your openldap image is coming from a private registry, you will also need to uncomment these lines to add this imagePullSecret (instructions for creating imagePullSecret are in the README)
 #generators:
