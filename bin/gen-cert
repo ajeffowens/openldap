@@ -6,7 +6,16 @@ set -eu
 openssl genpkey -algorithm RSA -out resources/ldap_key.pem -pkeyopt rsa_keygen_bits:2048
 
 # create new cert from key
-openssl req -new -x509 -sha256 -days 3650 -extensions v3_ca -subj "/C=US/CN=myldap" -key resources/ldap_key.pem -out resources/ldap_cert.pem -passin pass:lnxsas
+openssl req \
+    -x509 \
+    -newkey rsa:2048 \
+    -nodes \
+    -sha256 \
+    -days 3650 \
+    -keyout resources/ldap_key.pem \
+    -out resources/ldap_cert.pem \
+    -config resources/ldap.conf \
+    -extensions 'v3_req' 
 
 # insert base64 encoded versions of cert + key into ca.yaml
 export BASE64_CERT=$(cat resources/ldap_cert.pem|base64 -w0)
