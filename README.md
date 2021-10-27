@@ -53,25 +53,26 @@ kubectl create -n $LDAPNS secret docker-registry --dry-run=client regcred \
 kustomize build deploy/ | kubectl -n ${LDAPNS} apply -f -
 ```
 
-## 5. Use ldap
+## 5. If you are integrating this ldap with Viya...  
 Drop the ldap cert somewhere viya can consume it via `customer-provided-ca-certificates` generator (this is so Viya trusts LDAP)
 ```bash
-cp resources/ldap_cert.pem ../../viya/site-config/resources/ldap_ca.crt
+cp resources/ldap_cert.pem ${deploy}/site-config/resources/ldap_ca.crt
 ```  
 
 `sitedefault.yaml` too
 ```bash
-cp resources/sitedefault.yaml ../../viya/site-config/resources
+cp resources/sitedefault.yaml ${deploy}/site-config/resources
 ```
 
-## Appendix
+## Customize the users and groups
 If you'd like to customize the directory... make changes to `directory.yaml`.  Then update + bounce ldap pod
 ```bash
 kustomize build . | kubectl -n ${LDAPNS} apply -f -
 kubectl delete pod ldap-server-xxxxxxxxxxxx # you'll need to specify your ldap pod 
 ```
 
-test
+## Test the in-cluster connectivity
+Note that you will need to modify this script if you don't have dockerhub access
 ```bash
 ./bin/test
 ```
