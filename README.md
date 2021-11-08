@@ -11,9 +11,11 @@ kubectl create ns $LDAPNS
 ./bin/gen-cert
 ```
 
-## 3. (Optional) Use a private registry
+## 3. (Optional) Use a private registry for the openldap image
 
-By default, this deployment will pull and run a public openldap image (osixia/openldap).  If your cluster is able to pull images from public internet (dockerhub specifically), then skip this section.  If you want to use your own version (i.e., your cluster does not have access to docker hub), then there are one or three things you must do before moving on:
+**By default, this deployment will pull and run a public openldap image (osixia/openldap).  If your cluster is able to pull images from public internet (dockerhub specifically), then skip this section.**
+
+If you want to use your own version (i.e., your cluster does not have access to docker hub), then there are one or three things you must do before moving on:
 
 #### 3.1 - push your image to your registry
 
